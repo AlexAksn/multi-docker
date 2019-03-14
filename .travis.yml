@@ -14,7 +14,7 @@ after_success:
   - docker build -t aksyonov/multi-server ./server
   - docker build -t aksyonov/multi-worker ./worker
   # Log in to the docker CLI
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" -- password-stdin
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # TAke those images and push them to docker hub
   - docker push aksyonov/multi-client
   - docker push aksyonov/multi-nginx
