@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - docker
+
+before-install:
+  - docker build -t aksyonov/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run aksyonov/react-test npm test -- --coverage
+
+
+after_success:
+  - docker build -t aksyonov/multi-client ./client
+  - docker build -t aksyonov/multi-nginx ./nginx
+  - docker build -t aksyonov/multi-server ./server
+  - docker build -t aksyonov/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" -- password-stdin
+  # TAke those images and push them to docker hub
+  - docker push aksyonov/multi-client
+  - docker push aksyonov/multi-nginx
+  - docker push aksyonov/multi-server
+  - docker push aksyonov/multi-worker
